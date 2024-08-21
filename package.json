@@ -1,0 +1,25 @@
+{
+  "name": "inventorybackend",
+  "version": "1.0.0",
+  "description": "Backend for Inventory Service",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dumsilor/aLabInventory.git"
+  },
+  "author": "Md. Mosiur Rahman",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/dumsilor/aLabInventory/issues"
+  },
+  "homepage": "https://github.com/dumsilor/aLabInventory#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.3"
+  }
+}
