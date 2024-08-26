@@ -1,87 +1,39 @@
 const bodyParser = require("body-parser");
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
+
+const {getMaterial} = require('./utils.js');
+const {addMaterial} = require('./utils.js');
+const {deleteMaterial} = require('./utils.js');
+const {updateMaterial} = require('./utils.js');
+const {authenticateUser} = require('./auth.js');
+
+const {RawItem} = require('./db.js')
+const {FrozenItem} = require('./db.js')
+const {DryItem} = require('./db.js')
+const {PackagingItem} = require('./db.js')
+const {BeverageItem} = require('./db.js')
+const {CleaningProductItem} = require('./db.js')
+const {UtencilItem} = require('./db.js')
+const {ContingencyItem} = require('./db.js')
+const {MenuItem} = require('./db.js')
+const {Authentication} = require('./db.js')
+
 
 const app = express();
 
 app.use(cors())
 
+
 app.use(bodyParser.json());
 
-const inventoryDB = mongoose.createConnection('mongodb://localhost:27017/inventoryDB');
-const menuDB = mongoose.createConnection('mongodb://localhost:27017/menuDB');
 
-    
-const itemSchema = new mongoose.Schema({
-    itemName: String,
-    itemAmount: Number,
-    itemUnit: String,
-    itemCurrentPrice: Number,
-});
-
-const menuItemSchema = new mongoose.Schema({
-    itemName: String,
-    itemRawPrice: Number,
-    itemLocalPrice: Number,
-    itemFoodPandaPrice: Number,
-    imgPath: String,
-    ingredients: Array,
+app.post('/auth',(req,res)=>{
+    console.log(req.body)
+    // authenticateUser(Authentication,req.body,res).then((authStatus)=>res.send(authStatus)).catch((err)=>res.send(err))
+    authenticateUser(Authentication,req.body,res);
+    // res.send("Auth Worked")
 })
-
-const ingredientItemSchema = new mongoose.Schema({
-    name: String,
-    amount: Number,
-    unit: String
-})
-
-const RawItem = inventoryDB.model('rawItem',itemSchema)
-const FrozenItem = inventoryDB.model('frozenItem',itemSchema);
-const DryItem = inventoryDB.model("dryItem",itemSchema);
-const PackagingItem = inventoryDB.model("packagingItem",itemSchema);
-const BeverageItem = inventoryDB.model('beverageItem',itemSchema);
-const CleaningProductItem = inventoryDB.model('cleaningProductItem',itemSchema);
-const UtencilItem = inventoryDB.model('utencilItem',itemSchema);
-const ContingencyItem = inventoryDB.model('cotingencyItem',itemSchema)
-
-const MenuItem = menuDB.model('menuItem',menuItemSchema)
-const ingredient = menuDB.model('ingredient',ingredientItemSchema)
-
-function getMaterial(dbModel){
-    return dbModel.find().then((items)=>{
-         return items
-    }).catch((err)=>{
-        console.log(err)
-        throw err
-    })
-}
-
-async function addMaterial(dbModel,body,res){
-    const newMaterial = new dbModel(body)
-            try{
-                await newMaterial.save()
-                res.status(200).send(200)
-            } catch(error){
-                console.log(error)
-                res.status(401).send("Error writing Data")
-            } 
-}
-
-async function deleteMaterial(dbModel,body,res){
-    await dbModel.deleteOne({_id: body._id})
-            .then(()=> res.status(200).send("User Deleted \n" + body ))
-            .catch((err)=>res.status(401).send(err))
-}
-
-async function updateMaterial(dbModel,body,res){
-    await dbModel.findOneAndUpdate({_id: body._id},{
-            itemName: body.itemName,
-            itemAmount: body.itemAmount,
-            itemUnit: body.itemUnit,
-            itemCurrentPrice: body.itemCurrentPrice
-              }).then(()=> 
-                    res.status(200).send(200)).catch((err)=>res.send(err))
-}
 
 app.get('/menu', (req,res)=>{
     getMaterial(MenuItem).then((items)=>res.send(items)).catch((err)=>res.status(500).send(err))
