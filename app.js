@@ -30,9 +30,7 @@ app.use(bodyParser.json());
 
 app.post('/auth',(req,res)=>{
     console.log(req.body)
-    // authenticateUser(Authentication,req.body,res).then((authStatus)=>res.send(authStatus)).catch((err)=>res.send(err))
     authenticateUser(Authentication,req.body,res);
-    // res.send("Auth Worked")
 })
 
 app.get('/menu', (req,res)=>{
@@ -43,12 +41,6 @@ app.get('/inventory/:materialName',(req,res)=>{
     switch(req.params.materialName){
         case('rawmaterial'):
             getMaterial(RawItem).then((items)=>res.send(items)).catch((err)=>res.status(500).send(err))
-            // RawItem.find().then((items)=>{
-            //     res.send(items)
-            // }).catch((err)=>{
-            //     res.send(err)
-            //     console.log(err)
-            // })
             break;
             case('drystocks'):
                 getMaterial(DryItem).then((items)=>res.send(items)).catch((err)=>res.status(500).send(err))
@@ -75,27 +67,9 @@ app.get('/inventory/:materialName',(req,res)=>{
 })//get end
 
 app.post('/inventory/:materialName',(req,res)=>{
-    // testItem = 
-    // {
-    //     itemName: "Chicken Breast",
-    //     itemAmount: 1000,
-    //     itemUnit: "gm",
-    //     itemCurrentPrice: 400,
-    // }
-    // res.send("request Received")
-    // console.log("Request Received")
-    // console.log(req.body)
     switch(req.params.materialName){
         case('rawmaterial'):
             addMaterial(RawItem,req.body,res)
-            // const newMaterial = new RawItem(req.body)
-            // try{
-            //     newMaterial.save()
-            //     res.status(200).send(200)
-            // } catch(error){
-            //     console.log(error)
-            //     res.status(401).send("Error writing Data")
-            // }
             break;
         case('drystocks'):
             addMaterial(DryItem,req.body,res)
@@ -125,9 +99,6 @@ app.post('/inventory/:materialName/delete',(req,res)=>{
     switch(req.params.materialName){
         case('rawmaterial'):
             deleteMaterial(RawItem,req.body,res)
-            // RawItem.deleteOne({_id: req.body._id})
-            // .then(()=> res.status(200).send("User Deleted \n" + req.body ))
-            // .catch((err)=>res.status(401).send(err))
             break;
         case('drystocks'):
         deleteMaterial(DryItem,req.body,res)
@@ -158,13 +129,6 @@ app.post('/inventory/:materialName/update',(req,res)=>{
     switch(req.params.materialName){
         case('rawmaterial'):
             updateMaterial(RawItem,req.body,res)
-            // RawItem.findOneAndUpdate({_id: req.body._id},{
-            //     itemName: req.body.itemName,
-            //     itemAmount: req.body.itemAmount,
-            //     itemUnit: req.body.itemUnit,
-            //     itemCurrentPrice: req.body.itemCurrentPrice
-            // }).then(()=> 
-            // res.status(200).send(200)).catch((err)=>res.send(err))
             break;
         case('drystocks'):
             updateMaterial(DryItem,req.body,res)
